@@ -31,6 +31,7 @@ spec:
             - prod
 
   # here's the steps that are executed in series in the scaffolder backend. This takes everything under template folder, and passing the parameters and rendering the actual values. Result of this step would be a file with the actual name and env
+  # renders the files we need
   steps:
     - id: fetchBase
       name: Fetch Base
@@ -40,17 +41,16 @@ spec:
         values:
           app_name: ${{ parameters.component_id }}
           app_env: ${{ parameters.environment }}
-     #creates a new repo and push everything that was within the template file.     
+     #creates a new repo and push everything that was within the template file(the rendered files).     
     - id: publish
       name: Publish
       action: publish:github
       input:
-        allowedHosts:
-          - gitub.com
         description: This is ${{ parameters.name }}
         repoUrl: github.com?owner=UncleBlazerr&repo=${{parameters.component_id}}
         protectDefaultBranch: false
-
+    
+    #Once the gitub is repo is created, we're going to register this into Backstage using the catalog register action
     - id: register
       name: Register
       action: catalog:register
