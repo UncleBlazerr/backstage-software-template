@@ -1,0 +1,54 @@
+replicaCount: 1
+image:
+  repository: eggystrone/${{values.app_name}}
+  pullPolicy: IfNotPresent
+  tag: ${{values.app_name}}-eggystrone/${{values.app_env}}-latest
+  pullPolicy: IfNotPresent
+imagePullSecrets:
+  - name: regcred
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 5000
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: null
+  hosts:
+    - host: ${{values.app_name}}-${{values.app_env}}.test.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+resources:
+  requests:
+    cpu: 50m
+    memory: 50m
+livenessProbe:
+  httpGet:
+    path: /api/v1/healthz
+    port: 5000
+readinessProbe:
+  httpGet:
+    path: /api/v1/healthz
+    port: 5000
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
