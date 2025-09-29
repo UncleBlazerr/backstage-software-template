@@ -57,6 +57,16 @@ jobs:
           chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
 
+      - name: Argo Login
+        shell: bash
+        run: |
+          #install argocd
+          argocd login argo-cd-argocd-server.argocd  \
+            --insecure \
+            --grpc-web \
+            --username admin \
+            --password ${{ '${{ secrets.ARGOCD_PASSWORD }}' }}
+
       - name : Ensure argocd and app
         shell: bash
         run: |
@@ -80,12 +90,6 @@ jobs:
       - name : Argocd app sync
         shell: bash
         run: |
-          #install argocd
-          argocd login argo-cd-argocd-server.argocd  \
-            --insecure \
-            --grpc-web \
-            --username admin \
-            --password ${{ '${{ secrets.ARGOCD_PASSWORD }}' }}
           argocd app sync ${{values.app_name}}
           argocd app wait ${{values.app_name}} --timeout 180
           
