@@ -51,6 +51,7 @@ spec:
         description: This is ${{ parameters.name }}
         repoUrl: github.com?owner=UncleBlazerr-org&repo=${{parameters.component_id}}
         protectDefaultBranch: false
+        repoVisibility: public
     
     #Once the gitub is repo is created, we're going to register this into Backstage using the catalog register action
     - id: register
